@@ -125,10 +125,10 @@
     _currentItemIndex = 0;
     _numberOfItems = 0;
     
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTap:)];
-    tapGesture.delegate = self;
-    [_scrollView addGestureRecognizer:tapGesture];
-    [tapGesture release];
+    //    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTap:)];
+    //    tapGesture.delegate = self;
+    //    [_scrollView addGestureRecognizer:tapGesture];
+    //    [tapGesture release];
     
     self.clipsToBounds = YES;
     
@@ -367,6 +367,7 @@
             {
                 _previousContentOffset.x += scrollWidth;
                 [self setContentOffsetWithoutEvent:CGPointMake(_scrollView.contentOffset.x + scrollWidth, 0.0f)];
+                //[self setContentOffsetWithoutEvent:CGPointMake(scrollWidth, 0.0f)];
             }
             else if (_scrollView.contentOffset.x >= scrollWidth * 2.0f)
             {
@@ -894,7 +895,7 @@
             NSInteger index = [self clampedIndex:i + startIndex];
             [visibleIndices addObject:[NSNumber numberWithInteger:index]];
         }
-
+        
         //remove offscreen views
         for (NSNumber *number in [_itemViews allKeys])
         {
@@ -934,10 +935,10 @@
     //reset properties
     [self setContentOffsetWithoutEvent:CGPointZero];
     _scrollView.contentSize = CGSizeZero;
-    _previousItemIndex = 0;
-    _scrollOffset = 0.0f;
-    _currentItemIndex = 0;
-    _lastUpdateOffset = -1.0f;
+    //_previousItemIndex = 0;
+    //_scrollOffset = 0.0f;
+    //_currentItemIndex = 0;
+    //_lastUpdateOffset = -1.0f;
     _itemSize = CGSizeZero;
     _scrolling = NO;
     
