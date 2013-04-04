@@ -525,8 +525,9 @@
 
 - (void)layoutSubviews
 {
+    [super layoutSubviews];
     [self updateLayout];
-    [self performSelectorOnMainThread:@selector(updateLayout) withObject:nil waitUntilDone:NO];
+//    [self performSelectorOnMainThread:@selector(updateLayout) withObject:nil waitUntilDone:NO];
 }
 
 #pragma mark -
