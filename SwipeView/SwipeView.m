@@ -492,7 +492,7 @@
 
 - (void)setFrameForView:(UIView *)view atIndex:(NSInteger)index
 {
-    [UIView setAnimationsEnabled:NO];
+    //[UIView setAnimationsEnabled:NO];
     if (_vertical)
     {
         view.center = CGPointMake(_scrollView.frame.size.width/2.0f, ([self offsetForItemAtIndex:index] + 0.5f) * _itemSize.height + _scrollView.contentOffset.y);
@@ -501,7 +501,7 @@
     {
         view.center = CGPointMake(([self offsetForItemAtIndex:index] + 0.5f) * _itemSize.width + _scrollView.contentOffset.x, _scrollView.frame.size.height/2.0f);
     }
-    [UIView setAnimationsEnabled:YES];
+    //[UIView setAnimationsEnabled:YES];
 }
 
 - (void)layOutItemViews
@@ -517,9 +517,9 @@
     [self updateItemSizeAndCount];
     [self updateScrollViewDimensions];
     [self updateScrollOffset];
-    [UIView setAnimationsEnabled:NO];
+    //[UIView setAnimationsEnabled:NO];
     [self loadUnloadViews];
-    [UIView setAnimationsEnabled:YES];
+    //[UIView setAnimationsEnabled:YES];
     [self layOutItemViews];
 }
 
@@ -674,11 +674,11 @@
 
 - (void)setContentOffsetWithoutEvent:(CGPoint)contentOffset
 {
-    [UIView setAnimationsEnabled:NO];
+    //[UIView setAnimationsEnabled:NO];
     _suppressScrollEvent = YES;
-    _scrollView.contentOffset = contentOffset;
+    [_scrollView setContentOffset:contentOffset animated:NO];
     _suppressScrollEvent = NO;
-    [UIView setAnimationsEnabled:YES];
+    //[UIView setAnimationsEnabled:YES];
 }
 
 - (NSInteger)currentPage
