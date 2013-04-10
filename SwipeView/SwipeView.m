@@ -304,7 +304,7 @@
 
 - (UIView *)itemViewAtIndex:(NSInteger)index
 {
-    return [_itemViews objectForKey:[NSNumber numberWithInteger:index]];
+    return _itemViews[@(index)];
 }
 
 - (UIView *)currentItemView
@@ -317,7 +317,7 @@
     NSInteger index = [[_itemViews allValues] indexOfObject:view];
     if (index != NSNotFound)
     {
-        return [[[_itemViews allKeys] objectAtIndex:index] integerValue];
+        return [[_itemViews allKeys][index] integerValue];
     }
     return NSNotFound;
 }
@@ -334,7 +334,7 @@
 
 - (void)setItemView:(UIView *)view forIndex:(NSInteger)index
 {
-    [(NSMutableDictionary *)_itemViews setObject:view forKey:[NSNumber numberWithInteger:index]];
+    ((NSMutableDictionary *)_itemViews)[@(index)] = view;
 }
 
 
@@ -894,7 +894,7 @@
         for (NSInteger i = 0; i < numberOfVisibleItems; i++)
         {
             NSInteger index = [self clampedIndex:i + startIndex];
-            [visibleIndices addObject:[NSNumber numberWithInteger:index]];
+            [visibleIndices addObject:@(index)];
         }
         
         //remove offscreen views
@@ -902,7 +902,7 @@
         {
             if (![visibleIndices containsObject:number])
             {
-                UIView *view = [_itemViews objectForKey:number];
+                UIView *view = _itemViews[number];
                 [self queueItemView:view];
                 [view removeFromSuperview];
                 [_itemViews removeObjectForKey:number];
@@ -912,7 +912,7 @@
         //add onscreen views
         for (NSNumber *number in visibleIndices)
         {
-            UIView *view = [_itemViews objectForKey:number];
+            UIView *view = _itemViews[number];
             if (view == nil)
             {
                 [self loadViewAtIndex:[number integerValue]];
