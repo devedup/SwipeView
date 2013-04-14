@@ -782,6 +782,7 @@
 
 - (void)scrollToOffset:(CGFloat)offset duration:(NSTimeInterval)duration
 {
+    _numberOfItems = [_dataSource numberOfItemsInSwipeView:self];
     [self scrollByOffset:[self minScrollDistanceFromOffset:_scrollOffset toOffset:offset] duration:duration];
 }
 
