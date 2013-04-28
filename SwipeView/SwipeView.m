@@ -363,6 +363,7 @@
         else
         {
             CGFloat scrollWidth = _scrollView.contentSize.width / 3.0f;
+            CGFloat contentOffsetX = _scrollView.contentOffset.x;
             if (_scrollView.contentOffset.x < scrollWidth)
             {
                 _previousContentOffset.x += scrollWidth;
@@ -375,6 +376,7 @@
                 [self setContentOffsetWithoutEvent:CGPointMake(_scrollView.contentOffset.x - scrollWidth, 0.0f)];
             }
             _scrollOffset = [self clampedOffset:_scrollOffset];
+            
         }
     }
 }
@@ -930,6 +932,13 @@
         //reload view
         [self loadViewAtIndex:index];
     }
+}
+
+- (void) prepareForNewStream {
+    _previousItemIndex = 0;
+    _scrollOffset = 0.0f;
+    _currentItemIndex = 0;
+    _lastUpdateOffset = -1.0f;
 }
 
 - (void)reloadData

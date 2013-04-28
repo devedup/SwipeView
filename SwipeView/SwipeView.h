@@ -80,6 +80,7 @@ SwipeViewAlignment;
 @property (nonatomic, assign) BOOL defersItemViewLoading;
 @property (nonatomic, assign, getter = isVertical) BOOL vertical;
 
+- (void) prepareForNewStream;
 - (void)reloadData;
 - (void)reloadItemAtIndex:(NSInteger)index;
 - (void)scrollByNumberOfItems:(NSInteger)itemCount duration:(NSTimeInterval)duration;
