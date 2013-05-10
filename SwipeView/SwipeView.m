@@ -363,7 +363,7 @@
         else
         {
             CGFloat scrollWidth = _scrollView.contentSize.width / 3.0f;
-            CGFloat contentOffsetX = _scrollView.contentOffset.x;
+            //CGFloat contentOffsetX = _scrollView.contentOffset.x;
             if (_scrollView.contentOffset.x < scrollWidth)
             {
                 _previousContentOffset.x += scrollWidth;
