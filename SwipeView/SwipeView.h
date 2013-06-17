@@ -61,24 +61,20 @@ SwipeViewAlignment;
 @property (nonatomic, readonly) NSInteger numberOfPages;
 @property (nonatomic, readonly) CGSize itemSize;
 @property (nonatomic, assign) NSInteger itemsPerPage;
-@property (nonatomic, assign) BOOL truncateFinalPage;
 @property (nonatomic, strong, readonly) NSArray *indexesForVisibleItems;
 @property (nonatomic, strong, readonly) NSArray *visibleItemViews;
 @property (nonatomic, strong, readonly) UIView *currentItemView;
 @property (nonatomic, assign) NSInteger currentItemIndex;
 @property (nonatomic, assign) NSInteger currentPage;
-@property (nonatomic, assign) SwipeViewAlignment alignment;
 @property (nonatomic, assign, getter = isPagingEnabled) BOOL pagingEnabled;
 @property (nonatomic, assign, getter = isScrollEnabled) BOOL scrollEnabled;
-@property (nonatomic, assign, getter = isWrapEnabled) BOOL wrapEnabled;
 @property (nonatomic, assign) BOOL delaysContentTouches;
-@property (nonatomic, assign) BOOL bounces;
 @property (nonatomic, assign) float decelerationRate;
 @property (nonatomic, readonly, getter = isDragging) BOOL dragging;
 @property (nonatomic, readonly, getter = isDecelerating) BOOL decelerating;
 @property (nonatomic, readonly, getter = isScrolling) BOOL scrolling;
 @property (nonatomic, assign) BOOL defersItemViewLoading;
-@property (nonatomic, assign, getter = isVertical) BOOL vertical;
+
 
 - (void) prepareForNewStream;
 - (void)reloadData;
