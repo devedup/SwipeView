@@ -74,7 +74,7 @@ SwipeViewAlignment;
 @property (nonatomic, readonly, getter = isDecelerating) BOOL decelerating;
 @property (nonatomic, readonly, getter = isScrolling) BOOL scrolling;
 @property (nonatomic, assign) BOOL defersItemViewLoading;
-
+@property (nonatomic, assign) SwipeViewAlignment alignment;
 
 - (void) prepareForNewStream;
 - (void)reloadData;
@@ -85,6 +85,8 @@ SwipeViewAlignment;
 - (UIView *)itemViewAtIndex:(NSInteger)index;
 - (NSInteger)indexOfItemView:(UIView *)view;
 - (NSInteger)indexOfItemViewOrSubview:(UIView *)view;
+
+//- (void) rotateScrollView;
 
 @end
 

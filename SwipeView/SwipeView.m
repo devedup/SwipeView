@@ -85,11 +85,14 @@
 
 @implementation SwipeView
 
+//@synthesize currentItemView = _currentItemView;
+
 - (void)dealloc {
     [_timer invalidate];
     [_scrollView release];
     [_itemViews release];
     [_itemViewPool release];
+//	[_currentItemView release];
     [super ah_dealloc];
 }
 
@@ -152,7 +155,7 @@
     if (_dataSource != dataSource) {
         _dataSource = dataSource;
         if (_dataSource) {
-            [self reloadData];
+            //[self reloadData];
         }
     }
 }
@@ -160,7 +163,7 @@
 - (void)setDelegate:(id<SwipeViewDelegate>)delegate {
     if (_delegate != delegate) {
         _delegate = delegate;
-		[self setNeedsLayout];
+		//[self setNeedsLayout];
     }
 }
 
@@ -196,6 +199,13 @@
     if (_decelerationRate != decelerationRate) {
         _decelerationRate = decelerationRate;
         _scrollView.decelerationRate = _decelerationRate;
+    }
+}
+
+- (void)setAlignment:(SwipeViewAlignment)alignment {
+    if (_alignment != alignment) {
+        _alignment = alignment;
+        [self setNeedsLayout];
     }
 }
 
@@ -271,34 +281,64 @@
     CGRect frame = self.bounds;
     CGSize contentSize = frame.size;
 	
-	frame = CGRectMake(0.0f, 0.0f, _itemSize.width * _itemsPerPage, self.frame.size.height);
-	contentSize.width = _itemSize.width * _numberOfItems - (self.frame.size.width - frame.size.width);
+	
+	switch (self.alignment) {
+		case SwipeViewAlignmentCenter: {
+			frame = CGRectMake((self.frame.size.width - _itemSize.width * _itemsPerPage)/2.0f,
+							   0.0f, _itemSize.width * _itemsPerPage, self.frame.size.height);
+			contentSize.width = _itemSize.width * _numberOfItems;
+			break;
+		}
+		case SwipeViewAlignmentEdge: {
+			frame = CGRectMake(0.0f, 0.0f, _itemSize.width * _itemsPerPage, self.frame.size.height);
+			contentSize.width = _itemSize.width * _numberOfItems - (self.frame.size.width - frame.size.width);
+			break;
+		}
+		default:
+			break;
+	}
+	
 	
 	contentSize.width = _itemSize.width * _numberOfItems * 3.0f;
 	
-    if (!CGRectEqualToRect(_scrollView.frame, frame)) {
-        _scrollView.frame = frame;
-    }
-    
-    if (!CGSizeEqualToSize(_scrollView.contentSize, contentSize)) {
-        _scrollView.contentSize = contentSize;
-    }
+	if (!CGRectEqualToRect(_scrollView.frame, frame)) {
+		_scrollView.frame = frame;
+	}
+	
+	if (!CGSizeEqualToSize(_scrollView.contentSize, contentSize)) {
+		_scrollView.contentSize = contentSize;
+	}
+	
 }
+
+
 
 - (CGFloat)offsetForItemAtIndex:(NSInteger)index {
     //calculate relative position
     CGFloat offset = index - _scrollOffset;
 	
-	CGFloat width =  self.bounds.size.width;
-	CGFloat x =  _scrollView.frame.origin.x;
-	CGFloat itemWidth = _itemSize.width;
-	if (offset * itemWidth + x > width) {
-		offset -= _numberOfItems;
-	} else if (offset * itemWidth + x < -itemWidth) {
-		offset += _numberOfItems;
+	
+	if (_alignment == SwipeViewAlignmentCenter) {
+		if (offset > _numberOfItems/2) {
+			offset -= _numberOfItems;
+		} else if (offset < -_numberOfItems/2)
+		{
+			offset += _numberOfItems;
+		}
+	} else {
+		CGFloat width =  self.bounds.size.width;
+		CGFloat x =  _scrollView.frame.origin.x;
+		CGFloat itemWidth = _itemSize.width;
+		if (offset * itemWidth + x > width) {
+			offset -= _numberOfItems;
+		} else if (offset * itemWidth + x < -itemWidth) {
+			offset += _numberOfItems;
+		}
 	}
+	
     return offset;
 }
+
 
 - (void)setFrameForView:(UIView *)view atIndex:(NSInteger)index {
 	view.center = CGPointMake(([self offsetForItemAtIndex:index] + 0.5f) * _itemSize.width + _scrollView.contentOffset.x, _scrollView.frame.size.height/2.0f);
@@ -310,20 +350,7 @@
     }
 }
 
-- (void)updateLayout {
-    [self updateItemSizeAndCount];
-    [self updateScrollViewDimensions];
-    [self updateScrollOffset];
-    //[UIView setAnimationsEnabled:NO];
-    [self loadUnloadViews];
-    //[UIView setAnimationsEnabled:YES];
-    [self layOutItemViews];
-}
 
-- (void) layoutSubviews {
-    [super layoutSubviews];
-    [self updateLayout];
-}
 
 #pragma mark -  View queing
 
@@ -370,6 +397,12 @@
             }
         }
     }
+	
+//	UIView *nextView = [self.visibleItemViews objectAtIndex:self.currentItemIndex];
+//	if (nextView) {
+//		self.currentItemView =  nextView;
+//	}
+	
 }
 
 - (CGFloat)easeInOut:(CGFloat)time {
@@ -539,7 +572,17 @@
 #pragma mark - View loading
 
 - (UIView *)loadViewAtIndex:(NSInteger)index {
-    UIView *view = [_dataSource swipeView:self viewForItemAtIndex:index reusingView:[self dequeueItemView]];
+	
+	
+	
+    UIView *view = nil;
+//	if (index == self.currentItemIndex && self.currentItemView) {
+//		view = self.currentItemView;
+//		
+//	} else {
+		view = [_dataSource swipeView:self viewForItemAtIndex:index reusingView:[self dequeueItemView]];
+//	}
+		
     if (view == nil) {
         view = [[[UIView alloc] init] autorelease];
     }
@@ -570,7 +613,7 @@
     }
 }
 
-- (void)loadUnloadViews {
+- (void) loadUnloadViews {
     //check that item size is known
     CGFloat itemWidth = _itemSize.width;
     if (itemWidth) {
@@ -610,7 +653,7 @@
             UIView *view = _itemViews[number];
             if (view == nil) {
                 [self loadViewAtIndex:[number integerValue]];
-            }
+            } 
         }
     }
 }
@@ -630,7 +673,7 @@
     _lastUpdateOffset = -1.0f;
 }
 
-- (void)reloadData {
+- (void) reloadData {
     //reset properties
     [self setContentOffsetWithoutEvent:CGPointZero];
     _scrollView.contentSize = CGSizeZero;
@@ -654,6 +697,72 @@
     [self setNeedsLayout];
 }
 
+//- (void) setCurrentItemView:(UIView *)currentItemView {
+//	[currentItemView retain];
+//	[_currentItemView release];
+//	_currentItemView = currentItemView;
+//}
+
+#pragma mark - Rotation
+
+//- (void) rotateScrollView {
+//	
+//	[self reloadData];
+//	
+//	return;
+//	
+//	//[self setContentOffsetWithoutEvent:CGPointZero];
+//	
+//	//reset properties
+//    [self setContentOffsetWithoutEvent:CGPointZero];
+//    _scrollView.contentSize = CGSizeZero;
+//    //_previousItemIndex = 0;
+//    //_scrollOffset = 0.0f;
+//    //_currentItemIndex = 0;
+//    //_lastUpdateOffset = -1.0f;
+//    _itemSize = CGSizeZero;
+//    _scrolling = NO;
+//    
+//    //remove old views
+//    //remove old views
+//    for (UIView *view in self.visibleItemViews) {
+//		if (view != self.currentItemView) {
+//			[view removeFromSuperview];
+//		}		
+//    }
+//    
+//    //reset view pools
+//	UIView *current = self.currentItemView;
+//    self.itemViews = [NSMutableDictionary dictionary];
+//	[self.itemViews setObject:current forKey:@(self.currentItemIndex)];
+//	
+//    self.itemViewPool = [NSMutableSet set];
+//    
+//    //layout views
+//    [self updateLayout];
+//	
+//	
+//	[self setFrameForView:current atIndex:[self indexOfItemView:current]];
+//	CGRect frame = current.frame;
+//	frame.size = _itemSize;
+//	current.frame = frame;
+//}
+
+- (void) updateLayout {
+    [self updateItemSizeAndCount];
+    [self updateScrollViewDimensions];
+    [self updateScrollOffset];
+    //[UIView setAnimationsEnabled:NO];
+    [self loadUnloadViews];
+    //[UIView setAnimationsEnabled:YES];
+    [self layOutItemViews];
+}
+
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    [self updateLayout];
+}
+
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
 	UIView *view = [super hitTest:point withEvent:event];
 	if ([view isEqual:self]) {
@@ -670,16 +779,16 @@
 	return view;
 }
 
-- (void)didMoveToSuperview {
-    if (self.superview) {
-		[self setNeedsLayout];
-        if (_scrolling) {
-            [self startAnimation];
-        }
-	} else {
-        [self stopAnimation];
-    }
-}
+//- (void)didMoveToSuperview {
+//    if (self.superview) {
+//		[self setNeedsLayout];
+//        if (_scrolling) {
+//            [self startAnimation];
+//        }
+//	} else {
+//        [self stopAnimation];
+//    }
+//}
 
 #pragma mark -  Gestures and taps
 
