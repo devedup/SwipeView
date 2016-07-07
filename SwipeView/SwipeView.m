@@ -381,7 +381,7 @@
         [_delegate swipeViewDidScroll:self];
     }
     
-    if (!_defersItemViewLoading || fabsf([self minScrollDistanceFromOffset:_lastUpdateOffset toOffset:_scrollOffset]) >= 1.0f) {
+    if (!_defersItemViewLoading || fabs([self minScrollDistanceFromOffset:_lastUpdateOffset toOffset:_scrollOffset]) >= 1.0f) {
         //update item index
         _currentItemIndex = [self clampedIndex:roundf(_scrollOffset)];
         
@@ -496,7 +496,7 @@
 	if (fromOffset < toOffset) {
 		wrappedDistance = -wrappedDistance;
 	}
-	return (fabsf(directDistance) <= fabsf(wrappedDistance))? directDistance: wrappedDistance;
+	return (fabs(directDistance) <= fabs(wrappedDistance))? directDistance: wrappedDistance;
     
     return directDistance;
 }
@@ -886,7 +886,7 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     //prevent rounding errors from accumulating
     CGFloat integerOffset = roundf(_scrollOffset);
-    if (fabsf(_scrollOffset - integerOffset) < 0.01f){
+    if (fabs(_scrollOffset - integerOffset) < 0.01f){
         _scrollOffset = integerOffset;
     }
     
